@@ -18,9 +18,45 @@ fastify.register(require("@fastify/env"), {
     }
 })
 
+//register custom plugins
+fastify.register(require("./plugins/mongodb"))
+
+
 //Declare a route
 fastify.get("/", (request, reply) => {
     reply.send({hello: "world"})
+})
+
+//test database connection
+fastify.get("/test-db", async (request, reply) => {
+    try {
+        const mongoose = fastify.mongoose
+        const connectionState = mongoose.connection.readyState
+
+        let status = ""
+        switch (connectionState) {
+            case 0:
+                status = "disconnected"
+                break;
+            case 1:
+                status = "connected"
+                break;
+            case 2:
+                status = "connecting"
+                break;
+            case 3:
+                status = "disconnecting"
+                break;
+            default:
+                status = "unknown"
+                break;
+        }
+
+    } catch (error) {
+        fastify.log.error(err);;
+        reply.status(500).send({error: "Failed to test database connection"})
+        process.exit(1)
+    }
 })
 
 const start = async () => {
