@@ -1,4 +1,4 @@
-const Thumbnail = require("../models/thumbnails.js")
+const Thumbnail = require("../models/thumbnail.js")
 const path = require("path")
 const fs = require("fs")
 const {pipeline} = require("stream")
