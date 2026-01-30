@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ThumbnailCard from '../components/ThumbnailCard';
 import { thumbnailApi } from '../services/api';
+import { Search, Plus, Package, BadgeCheck, Gem, X, Image } from 'lucide-react';
 
 function Dashboard() {
     const [thumbnails, setThumbnails] = useState([]);
@@ -63,7 +64,9 @@ function Dashboard() {
                     <h1 className="page-title">Dashboard</h1>
                     <div className="page-actions">
                         <div className="search-bar">
-                            <span className="icon">🔍</span>
+                            <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                <Search size={16} />
+                            </span>
                             <input
                                 type="text"
                                 placeholder="Search thumbnails..."
@@ -71,8 +74,8 @@ function Dashboard() {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Link to="/upload" className="btn btn-primary">
-                            ➕ Upload
+                        <Link to="/upload" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Plus size={16} /> Upload
                         </Link>
                     </div>
                 </div>
@@ -80,17 +83,23 @@ function Dashboard() {
                 {/* Stats Grid */}
                 <div className="stats-grid">
                     <div className="stat-card">
-                        <div className="icon" style={{ color: 'var(--text-secondary)' }}>📦</div>
+                        <div className="icon" style={{ color: 'var(--text-secondary)' }}>
+                            <Package size={24} />
+                        </div>
                         <div className="value">{stats.total}</div>
                         <div className="label">Total Thumbnails</div>
                     </div>
                     <div className="stat-card">
-                        <div className="icon" style={{ color: 'var(--success)' }}>🆓</div>
+                        <div className="icon" style={{ color: 'var(--success)' }}>
+                            <BadgeCheck size={24} />
+                        </div>
                         <div className="value">{stats.free}</div>
                         <div className="label">Free Thumbnails</div>
                     </div>
                     <div className="stat-card">
-                        <div className="icon" style={{ color: 'var(--text-secondary)' }}>💎</div>
+                        <div className="icon" style={{ color: 'var(--text-secondary)' }}>
+                            <Gem size={24} />
+                        </div>
                         <div className="value">{stats.paid}</div>
                         <div className="label">Paid Thumbnails</div>
                     </div>
@@ -103,7 +112,9 @@ function Dashboard() {
                     </div>
                 ) : error ? (
                     <div className="empty-state">
-                        <div className="icon">❌</div>
+                        <div className="icon">
+                            <X size={64} />
+                        </div>
                         <h3>Error loading thumbnails</h3>
                         <p>{error}</p>
                         <button className="btn btn-primary" onClick={fetchThumbnails}>
@@ -112,12 +123,14 @@ function Dashboard() {
                     </div>
                 ) : filteredThumbnails.length === 0 ? (
                     <div className="empty-state">
-                        <div className="icon">🖼️</div>
+                        <div className="icon">
+                            <Image size={64} />
+                        </div>
                         <h3>{searchQuery ? 'No results found' : 'No thumbnails yet'}</h3>
                         <p>{searchQuery ? 'Try a different search term' : 'Get started by uploading your first thumbnail'}</p>
                         {!searchQuery && (
-                            <Link to="/upload" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-                                ➕ Upload Thumbnail
+                            <Link to="/upload" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <Plus size={16} /> Upload Thumbnail
                             </Link>
                         )}
                     </div>

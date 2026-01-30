@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
+import { User, Globe, Lock, Save, LogOut } from 'lucide-react';
 
 function Profile() {
     const { user, logout } = useAuth();
@@ -55,13 +56,13 @@ function Profile() {
                     {/* Profile Header */}
                     <div className="profile-header">
                         <div className="profile-avatar">
-                            {user?.email?.charAt(0)?.toUpperCase() || '👤'}
+                            {user?.email?.charAt(0)?.toUpperCase() || <User size={32} />}
                         </div>
                         <div className="profile-info">
                             <h2>{user?.name || 'User'}</h2>
                             <p>{user?.email || 'user@example.com'}</p>
-                            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
-                                🌍 {user?.country || 'Not specified'}
+                            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <Globe size={14} /> {user?.country || 'Not specified'}
                             </p>
                         </div>
                     </div>
@@ -89,7 +90,9 @@ function Profile() {
                             <div className="form-group">
                                 <label className="form-label">Current Password</label>
                                 <div className="form-input-icon">
-                                    <span className="icon">🔒</span>
+                                    <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Lock size={16} />
+                                    </span>
                                     <input
                                         type="password"
                                         className="form-input"
@@ -104,7 +107,9 @@ function Profile() {
                             <div className="form-group">
                                 <label className="form-label">New Password</label>
                                 <div className="form-input-icon">
-                                    <span className="icon">🔐</span>
+                                    <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Lock size={16} />
+                                    </span>
                                     <input
                                         type="password"
                                         className="form-input"
@@ -119,7 +124,9 @@ function Profile() {
                             <div className="form-group">
                                 <label className="form-label">Confirm New Password</label>
                                 <div className="form-input-icon">
-                                    <span className="icon">🔐</span>
+                                    <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Lock size={16} />
+                                    </span>
                                     <input
                                         type="password"
                                         className="form-input"
@@ -135,6 +142,7 @@ function Profile() {
                                 type="submit"
                                 className="btn btn-primary btn-full"
                                 disabled={loading}
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                             >
                                 {loading ? (
                                     <>
@@ -142,7 +150,9 @@ function Profile() {
                                         Updating...
                                     </>
                                 ) : (
-                                    <>✨ Update Password</>
+                                    <>
+                                        <Save size={16} /> Update Password
+                                    </>
                                 )}
                             </button>
                         </form>
@@ -157,8 +167,9 @@ function Profile() {
                         <button
                             className="btn btn-danger"
                             onClick={logout}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                         >
-                            🚪 Logout
+                            <LogOut size={16} /> Logout
                         </button>
                     </div>
                 </div>

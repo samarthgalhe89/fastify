@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { CloudUpload, X } from 'lucide-react';
 
 function UploadZone({ onFileSelect, selectedFile, onClear }) {
     const [isDragging, setIsDragging] = useState(false);
@@ -60,7 +61,9 @@ function UploadZone({ onFileSelect, selectedFile, onClear }) {
                     accept="image/*"
                     style={{ display: 'none' }}
                 />
-                <div className="icon">☁️</div>
+                <div className="icon">
+                    <CloudUpload size={48} />
+                </div>
                 <h3>Drop your thumbnail here</h3>
                 <p>or click to browse files</p>
                 <p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
@@ -84,8 +87,9 @@ function UploadZone({ onFileSelect, selectedFile, onClear }) {
                             e.stopPropagation();
                             onClear();
                         }}
+                        style={{ display: 'flex', alignItems: 'center' }}
                     >
-                        ✖️
+                        <X size={16} />
                     </button>
                 </div>
             )}

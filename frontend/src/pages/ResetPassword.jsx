@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { CheckCircle, KeyRound, Lock, Save, ArrowLeft } from 'lucide-react';
 
 function ResetPassword() {
     const { token } = useParams();
@@ -43,7 +44,9 @@ function ResetPassword() {
         return (
             <div className="auth-page">
                 <div className="auth-card glass-card" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
+                    <div style={{ fontSize: '4rem', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+                        <CheckCircle size={64} color="var(--success)" />
+                    </div>
                     <h2 style={{ marginBottom: '1rem' }}>Password Reset!</h2>
                     <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
                         Your password has been successfully reset. Redirecting to login...
@@ -60,7 +63,9 @@ function ResetPassword() {
         <div className="auth-page">
             <div className="auth-card glass-card">
                 <div className="auth-logo">
-                    <h1>🔐 New Password</h1>
+                    <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                        <KeyRound size={24} /> New Password
+                    </h1>
                     <p>Enter your new password below</p>
                 </div>
 
@@ -69,7 +74,9 @@ function ResetPassword() {
 
                     <div className="form-group">
                         <div className="form-input-icon">
-                            <span className="icon">🔒</span>
+                            <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                <Lock size={16} />
+                            </span>
                             <input
                                 type="password"
                                 className="form-input"
@@ -83,7 +90,9 @@ function ResetPassword() {
 
                     <div className="form-group">
                         <div className="form-input-icon">
-                            <span className="icon">🔐</span>
+                            <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                <Lock size={16} />
+                            </span>
                             <input
                                 type="password"
                                 className="form-input"
@@ -102,13 +111,17 @@ function ResetPassword() {
                                 Resetting...
                             </>
                         ) : (
-                            <>✨ Reset Password</>
+                            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                <Save size={16} /> Reset Password
+                            </span>
                         )}
                     </button>
                 </form>
 
                 <div className="auth-footer">
-                    <Link to="/login">← Back to Sign In</Link>
+                    <Link to="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <ArrowLeft size={14} /> Back to Sign In
+                    </Link>
                 </div>
             </div>
         </div>

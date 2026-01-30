@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { thumbnailApi } from '../services/api';
+import { X, ArrowLeft, Gem, BadgeCheck, Edit, Download, Trash2 } from 'lucide-react';
 
 function ThumbnailView() {
     const { id } = useParams();
@@ -68,11 +69,13 @@ function ThumbnailView() {
                 <Sidebar />
                 <main className="main-content">
                     <div className="empty-state">
-                        <div className="icon">❌</div>
+                        <div className="icon">
+                            <X size={64} />
+                        </div>
                         <h3>Thumbnail not found</h3>
                         <p>{error || 'The thumbnail you are looking for does not exist.'}</p>
-                        <Link to="/dashboard" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-                            ← Back to Dashboard
+                        <Link to="/dashboard" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <ArrowLeft size={16} /> Back to Dashboard
                         </Link>
                     </div>
                 </main>
@@ -87,7 +90,7 @@ function ThumbnailView() {
             <main className="main-content">
                 <div style={{ marginBottom: '1.5rem' }}>
                     <Link to="/dashboard" style={{ color: 'var(--text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                        ← Back to Dashboard
+                        <ArrowLeft size={16} /> Back to Dashboard
                     </Link>
                 </div>
 
@@ -108,21 +111,21 @@ function ThumbnailView() {
                             {thumbnail.version && (
                                 <span className="thumbnail-badge version">{thumbnail.version}</span>
                             )}
-                            <span className={`thumbnail-badge ${thumbnail.paid ? 'paid' : 'free'}`}>
-                                {thumbnail.paid ? '💎 Paid' : '🆓 Free'}
+                            <span className={`thumbnail-badge ${thumbnail.paid ? 'paid' : 'free'}`} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                {thumbnail.paid ? <><Gem size={12} /> Paid</> : <><BadgeCheck size={12} /> Free</>}
                             </span>
                         </div>
                     </div>
 
                     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                        <Link to={`/thumbnails/${id}/edit`} className="btn btn-secondary">
-                            ✏️ Edit
+                        <Link to={`/thumbnails/${id}/edit`} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Edit size={16} /> Edit
                         </Link>
-                        <button className="btn btn-secondary" onClick={handleDownload}>
-                            📥 Download
+                        <button className="btn btn-secondary" onClick={handleDownload} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Download size={16} /> Download
                         </button>
-                        <button className="btn btn-danger" onClick={handleDelete}>
-                            🗑️ Delete
+                        <button className="btn btn-danger" onClick={handleDelete} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Trash2 size={16} /> Delete
                         </button>
                     </div>
                 </div>

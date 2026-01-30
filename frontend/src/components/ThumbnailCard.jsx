@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Gem, BadgeCheck, Edit, Trash2 } from 'lucide-react';
 
 function ThumbnailCard({ thumbnail, onDelete }) {
     const handleDelete = (e) => {
@@ -26,8 +27,8 @@ function ThumbnailCard({ thumbnail, onDelete }) {
                     {thumbnail.version && (
                         <span className="thumbnail-badge version">{thumbnail.version}</span>
                     )}
-                    <span className={`thumbnail-badge ${thumbnail.paid ? 'paid' : 'free'}`}>
-                        {thumbnail.paid ? '💎 Paid' : '🆓 Free'}
+                    <span className={`thumbnail-badge ${thumbnail.paid ? 'paid' : 'free'}`} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        {thumbnail.paid ? <><Gem size={12} /> Paid</> : <><BadgeCheck size={12} /> Free</>}
                     </span>
                 </div>
                 <div className="thumbnail-actions">
@@ -35,14 +36,16 @@ function ThumbnailCard({ thumbnail, onDelete }) {
                         to={`/thumbnails/${thumbnail._id}/edit`}
                         className="btn btn-secondary btn-sm"
                         onClick={(e) => e.stopPropagation()}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                     >
-                        ✏️ Edit
+                        <Edit size={14} /> Edit
                     </Link>
                     <button
                         className="btn btn-danger btn-sm"
                         onClick={handleDelete}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                     >
-                        🗑️ Delete
+                        <Trash2 size={14} /> Delete
                     </button>
                 </div>
             </div>

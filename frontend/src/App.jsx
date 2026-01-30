@@ -34,12 +34,6 @@ function App() {
             </ProtectedRoute>
           } />
 
-          <Route path="/thumbnails" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-
           <Route path="/thumbnails/:id" element={
             <ProtectedRoute>
               <ThumbnailView />

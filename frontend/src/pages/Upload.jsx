@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import UploadZone from '../components/UploadZone';
 import { thumbnailApi } from '../services/api';
+import { Video, Tag, Gem, Upload as UploadIcon } from 'lucide-react';
 
 function Upload() {
     const [file, setFile] = useState(null);
@@ -89,7 +90,9 @@ function Upload() {
                         <div className="form-group" style={{ marginTop: '1.5rem' }}>
                             <label className="form-label">Video Name *</label>
                             <div className="form-input-icon">
-                                <span className="icon">🎬</span>
+                                <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Video size={16} />
+                                </span>
                                 <input
                                     type="text"
                                     className="form-input"
@@ -104,7 +107,9 @@ function Upload() {
                         <div className="form-group">
                             <label className="form-label">Version</label>
                             <div className="form-input-icon">
-                                <span className="icon">🏷️</span>
+                                <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Tag size={16} />
+                                </span>
                                 <input
                                     type="text"
                                     className="form-input"
@@ -123,7 +128,9 @@ function Upload() {
                                     onChange={(e) => setIsPaid(e.target.checked)}
                                 />
                                 <span className="toggle-switch"></span>
-                                <span className="toggle-label">💎 Paid Content</span>
+                                <span className="toggle-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <Gem size={16} /> Paid Content
+                                </span>
                             </label>
                         </div>
 
@@ -150,7 +157,9 @@ function Upload() {
                                     Uploading...
                                 </>
                             ) : (
-                                <>✨ Upload Thumbnail</>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <UploadIcon size={16} /> Upload Thumbnail
+                                </span>
                             )}
                         </button>
                     </form>
