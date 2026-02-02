@@ -1,35 +1,46 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
-import UploadZone from '../components/UploadZone';
 import { thumbnailApi } from '../services/api';
-import { Video, Tag, Gem, Upload as UploadIcon } from 'lucide-react';
+import { Video, Tag, Gem, Save, ArrowLeft } from 'lucide-react';
 
-function Upload() {
-    const [file, setFile] = useState(null);
-    const [videoName, setVideoName] = useState('');
-    const [version, setVersion] = useState('');
-    const [isPaid, setIsPaid] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const [error, setError] = useState('');
+function EditThumbnail() {
+    const { id } = useParams();
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
 
+    const [videoName, setVideoName] = useState('');
+    const [version, setVersion] = useState('');
+    const [isPaid, setIsPaid] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [currentImage, setCurrentImage] = useState('');
+
+    useEffect(() => {
+        const fetchThumbnail = async () => {
+            try {
+                const data = await thumbnailApi.getById(id);
+                setVideoName(data.videoName);
+                setVersion(data.version || '');
+                setIsPaid(data.paid);
+                setCurrentImage(data.image);
+            } catch (err) {
+                setError('Failed to load thumbnail details');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (isAuthenticated) {
+            fetchThumbnail();
+        }
+    }, [id, isAuthenticated]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!isAuthenticated) {
-            setError('Please log in to upload thumbnails');
-            setTimeout(() => navigate('/login'), 2000);
-            return;
-        }
-
-        if (!file) {
-            setError('Please select an image to upload');
-            return;
-        }
 
         if (!videoName.trim()) {
             setError('Please enter a video name');
@@ -37,47 +48,34 @@ function Upload() {
         }
 
         setError('');
-        setLoading(true);
-        setProgress(0);
-
-        // Simulate progress
-        const progressInterval = setInterval(() => {
-            setProgress(prev => {
-                if (prev >= 90) {
-                    clearInterval(progressInterval);
-                    return prev;
-                }
-                return prev + 10;
-            });
-        }, 200);
+        setSaving(true);
 
         try {
-            const formData = new FormData();
-            formData.append('image', file);
-            formData.append('videoName', videoName);
-            formData.append('version', version);
-            formData.append('paid', isPaid.toString());
+            const updateData = {
+                videoName,
+                version,
+                paid: isPaid
+            };
 
-            await thumbnailApi.create(formData);
-
-            setProgress(100);
-            setTimeout(() => {
-                navigate('/dashboard');
-            }, 500);
+            await thumbnailApi.update(id, updateData);
+            navigate('/dashboard');
         } catch (err) {
-            const errorMessage = err.message || 'Failed to upload thumbnail';
-            // Provide more helpful error messages
-            if (errorMessage.includes('user') || errorMessage.includes('Path')) {
-                setError('Authentication error. Please log in again.');
-                setTimeout(() => navigate('/login'), 2000);
-            } else {
-                setError(errorMessage);
-            }
-            clearInterval(progressInterval);
+            setError(err.message || 'Failed to update thumbnail');
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className="spinner"></div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">
@@ -85,7 +83,14 @@ function Upload() {
 
             <main className="main-content">
                 <div className="page-header">
-                    <h1 className="page-title">Upload Thumbnail</h1>
+                    <button
+                        onClick={() => navigate('/dashboard')}
+                        className="btn btn-secondary"
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}
+                    >
+                        <ArrowLeft size={16} /> Back
+                    </button>
+                    <h1 className="page-title">Edit Thumbnail</h1>
                 </div>
 
                 <div style={{ maxWidth: '600px' }}>
@@ -96,13 +101,27 @@ function Upload() {
                             </div>
                         )}
 
-                        <UploadZone
-                            selectedFile={file}
-                            onFileSelect={setFile}
-                            onClear={() => setFile(null)}
-                        />
+                        <div className="form-group" style={{ marginBottom: '2rem' }}>
+                            <label className="form-label">Current Thumbnail</label>
+                            <div style={{
+                                width: '100%',
+                                height: 'auto',
+                                borderRadius: 'var(--radius-lg)',
+                                overflow: 'hidden',
+                                border: '1px solid var(--border-color)'
+                            }}>
+                                <img
+                                    src={`http://localhost:4000${currentImage}`}
+                                    alt="Current thumbnail"
+                                    style={{ width: '100%', display: 'block' }}
+                                />
+                            </div>
+                            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                                Note: Changing the image file is not supported in this version.
+                            </p>
+                        </div>
 
-                        <div className="form-group" style={{ marginTop: '1.5rem' }}>
+                        <div className="form-group">
                             <label className="form-label">Video Name *</label>
                             <div className="form-input-icon">
                                 <span className="icon" style={{ display: 'flex', alignItems: 'center' }}>
@@ -149,31 +168,19 @@ function Upload() {
                             </label>
                         </div>
 
-                        {loading && (
-                            <div style={{ marginBottom: '1.5rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}>
-                                    <span>Uploading...</span>
-                                    <span>{progress}%</span>
-                                </div>
-                                <div className="progress-bar">
-                                    <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
-                                </div>
-                            </div>
-                        )}
-
                         <button
                             type="submit"
                             className="btn btn-primary btn-full btn-lg"
-                            disabled={loading}
+                            disabled={saving}
                         >
-                            {loading ? (
+                            {saving ? (
                                 <>
                                     <span className="spinner" style={{ width: '20px', height: '20px', borderWidth: '2px' }}></span>
-                                    Uploading...
+                                    Saving...
                                 </>
                             ) : (
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <UploadIcon size={16} /> Upload Thumbnail
+                                    <Save size={16} /> Save Changes
                                 </span>
                             )}
                         </button>
@@ -184,4 +191,4 @@ function Upload() {
     );
 }
 
-export default Upload;
+export default EditThumbnail;

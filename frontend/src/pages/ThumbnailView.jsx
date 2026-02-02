@@ -43,7 +43,7 @@ function ThumbnailView() {
     const handleDownload = () => {
         if (thumbnail) {
             const link = document.createElement('a');
-            link.href = `http://localhost:3000${thumbnail.image}`;
+            link.href = `http://localhost:4000${thumbnail.image}`;
             link.download = `${thumbnail.videoName}-thumbnail.jpg`;
             link.target = '_blank';
             link.click();
@@ -97,10 +97,11 @@ function ThumbnailView() {
                 <div className="detail-view">
                     <div className="detail-image">
                         <img
-                            src={`http://localhost:3000${thumbnail.image}`}
+                            src={`http://localhost:4000${thumbnail.image}`}
                             alt={thumbnail.videoName}
                             onError={(e) => {
-                                e.target.src = 'https://via.placeholder.com/800x450?text=No+Image';
+                                e.target.onerror = null;
+                                e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450"%3E%3Crect fill="%23262626" width="800" height="450"/%3E%3Ctext fill="%23666" font-family="sans-serif" font-size="24" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
                             }}
                         />
                     </div>

@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Gem, BadgeCheck, Edit, Trash2 } from 'lucide-react';
 
 function ThumbnailCard({ thumbnail, onDelete }) {
+    const navigate = useNavigate();
+
     const handleDelete = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -10,14 +12,19 @@ function ThumbnailCard({ thumbnail, onDelete }) {
         }
     };
 
+    const handleCardClick = () => {
+        navigate(`/thumbnails/${thumbnail._id}`);
+    };
+
     return (
-        <Link to={`/thumbnails/${thumbnail._id}`} className="thumbnail-card">
+        <div className="thumbnail-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
             <div className="thumbnail-image">
                 <img
-                    src={`http://localhost:3000${thumbnail.image}`}
+                    src={`http://localhost:4000${thumbnail.image}`}
                     alt={thumbnail.videoName}
                     onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x225?text=No+Image';
+                        e.target.onerror = null; // Prevent infinite loop
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225" viewBox="0 0 400 225"%3E%3Crect fill="%23262626" width="400" height="225"/%3E%3Ctext fill="%23666" font-family="sans-serif" font-size="18" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
                     }}
                 />
             </div>
@@ -49,7 +56,7 @@ function ThumbnailCard({ thumbnail, onDelete }) {
                     </button>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }
 

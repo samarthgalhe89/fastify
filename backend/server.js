@@ -1,11 +1,20 @@
 require("dotenv").config();
 const path = require("path");
-const fastify = require("fastify")({logger: true})
+const fastify = require("fastify")({ logger: true })
 
 //register plugins
-fastify.register(require("@fastify/cors"))
+fastify.register(require("@fastify/cors"), {
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+})
 fastify.register(require("@fastify/sensible"))
-fastify.register(require("@fastify/multipart"))
+fastify.register(require("@fastify/multipart"), {
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10 MB
+        files: 1
+    }
+})
 fastify.register(require("@fastify/static"), {
     root: path.join(__dirname, "uploads"),
     prefix: "/uploads/"
@@ -16,9 +25,9 @@ fastify.register(require("@fastify/env"), {
         type: "object",
         required: ["PORT", "MONGO_URI", "JWT_SECRET"],
         properties: {
-            PORT: {type: "string", default: 3000},
-            MONGO_URI: {type: "string"},
-            JWT_SECRET: {type: "string"}
+            PORT: { type: "string", default: 3000 },
+            MONGO_URI: { type: "string" },
+            JWT_SECRET: { type: "string" }
         }
     }
 })
@@ -29,12 +38,12 @@ fastify.register(require("./plugins/jwt"))
 
 
 //register routes
-fastify.register(require("./routes/auth"), {prefix:  "api/auth"})
-fastify.register(require("./routes/thumbnail"), {prefix: "api/thumbnails"})
+fastify.register(require("./routes/auth"), { prefix: "/api/auth" })
+fastify.register(require("./routes/thumbnail"), { prefix: "/api/thumbnails" })
 
 //Declare a route
 fastify.get("/", (request, reply) => {
-    reply.send({hello: "world"})
+    reply.send({ hello: "world" })
 })
 
 //test database connection
@@ -64,16 +73,16 @@ fastify.get("/test-db", async (request, reply) => {
 
     } catch (error) {
         fastify.log.error(err);;
-        reply.status(500).send({error: "Failed to test database connection"})
+        reply.status(500).send({ error: "Failed to test database connection" })
         process.exit(1)
     }
 })
 
 const start = async () => {
     try {
-        await fastify.listen({port: process.env.PORT})
+        await fastify.listen({ port: process.env.PORT })
         fastify.log.info(`Server running at http://localhost:${process.env.PORT}`)
-    } catch (err){
+    } catch (err) {
         fastify.log.error(err)
         process.exit(1)
     }

@@ -12,6 +12,7 @@ import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Upload from './pages/Upload';
 import ThumbnailView from './pages/ThumbnailView';
+import EditThumbnail from './pages/EditThumbnail';
 import Profile from './pages/Profile';
 
 import './index.css';
@@ -37,6 +38,12 @@ function App() {
           <Route path="/thumbnails/:id" element={
             <ProtectedRoute>
               <ThumbnailView />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/thumbnails/:id/edit" element={
+            <ProtectedRoute>
+              <EditThumbnail />
             </ProtectedRoute>
           } />
 

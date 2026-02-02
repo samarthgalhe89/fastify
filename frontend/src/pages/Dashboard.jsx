@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ThumbnailCard from '../components/ThumbnailCard';
 import { thumbnailApi } from '../services/api';
-import { Search, Plus, Package, BadgeCheck, Gem, X, Image } from 'lucide-react';
+import { Search, Plus, Package, BadgeCheck, Gem, X, Image, Trash2 } from 'lucide-react';
 
 function Dashboard() {
     const [thumbnails, setThumbnails] = useState([]);
@@ -49,6 +49,27 @@ function Dashboard() {
         }
     };
 
+    const handleDeleteAll = async () => {
+        if (thumbnails.length === 0) {
+            alert('No thumbnails to delete');
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `Are you sure you want to delete all ${thumbnails.length} thumbnail(s)? This action cannot be undone.`
+        );
+
+        if (!confirmed) return;
+
+        try {
+            await thumbnailApi.deleteAll();
+            setThumbnails([]);
+            setFilteredThumbnails([]);
+        } catch (err) {
+            alert('Failed to delete all thumbnails');
+        }
+    };
+
     const stats = {
         total: thumbnails.length,
         paid: thumbnails.filter(t => t.paid).length,
@@ -74,9 +95,26 @@ function Dashboard() {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Link to="/upload" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <Plus size={16} /> Upload
-                        </Link>
+                        <div style={{ display: 'flex', gap: '0.75rem' }}>
+                            <button
+                                onClick={handleDeleteAll}
+                                className="btn btn-secondary"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    background: 'rgba(239, 68, 68, 0.1)',
+                                    color: '#ef4444',
+                                    border: '1px solid rgba(239, 68, 68, 0.2)'
+                                }}
+                                disabled={thumbnails.length === 0}
+                            >
+                                <Trash2 size={16} /> Delete All
+                            </button>
+                            <Link to="/upload" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <Plus size={16} /> Upload
+                            </Link>
+                        </div>
                     </div>
                 </div>
 

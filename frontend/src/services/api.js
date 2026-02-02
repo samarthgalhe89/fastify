@@ -47,11 +47,13 @@ export const thumbnailApi = {
             body: formData,
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-            throw new Error('Failed to create thumbnail');
+            throw new Error(data.message || 'Failed to create thumbnail');
         }
 
-        return response.json();
+        return data;
     },
 
     // Update thumbnail
@@ -86,9 +88,10 @@ export const thumbnailApi = {
         return response.json();
     },
 
+
     // Delete all thumbnails
     deleteAll: async () => {
-        const response = await fetch(`${API_BASE}/thumbnails`, {
+        const response = await fetch(`${API_BASE}/thumbnails/all`, {
             method: 'DELETE',
             headers: getAuthHeaders(),
         });
